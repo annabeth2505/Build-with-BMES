@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01 — Blink an LED · Build with BMES</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="brand">
+    <span class="brand-mark">
+      <span class="brand-kicker">build with</span>
+      <span class="brand-word">BMES<svg class="sparkle" viewBox="0 0 24 24"><path d="M12 1.5 L14.2 9.8 L22.5 12 L14.2 14.2 L12 22.5 L9.8 14.2 L1.5 12 L9.8 9.8 Z"/></svg></span>
+    </span>
+  </a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blink.html">01 Blink</a></li>
+    <li><a href="rgb-mixer.html">02 RGB</a></li>
+    <li><a href="traffic-light.html">03 Traffic</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+  <section class="proj-hero">
+    <a href="index.html" class="back">← All projects</a>
+    <div class="label">Project 01</div>
+    <h1>Blink an <em>LED.</em></h1>
+    <p class="lede">One light. On. Off. On. Off. It sounds boring — but every Arduino project on Earth starts with this. By the end you'll know how to make a microcontroller actually <em>do something</em> in the real world.</p>
+  </section>
+
+  <section class="block">
+    <div class="goal">
+      <h3>Make an LED blink on and off</h3>
+      <p>The light should turn on, wait a moment, turn off, wait again, and repeat — forever. You decide how fast.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">01</span><h2>Components you'll need</h2></div>
+    <div class="components">
+      <div class="component"><span class="qty">1</span><div class="name">Arduino Uno R3</div><div class="note">The brain of the operation</div></div>
+      <div class="component"><span class="qty">1</span><div class="name">Small breadboard</div><div class="note">Where everything plugs in</div></div>
+      <div class="component"><span class="qty">1</span><div class="name">LED</div><div class="note">Any color you like</div></div>
+      <div class="component"><span class="qty">1</span><div class="name">220Ω resistor</div><div class="note">Protects the LED from too much current</div></div>
+      <div class="component"><span class="qty">~4</span><div class="name">Jumper wires</div><div class="note">To connect everything together</div></div>
+    </div>
+    <div class="callout">
+      <strong>Heads up: LEDs have a direction</strong>
+      The longer leg is the <em>positive</em> side (anode). The short leg goes to ground. Flip it and nothing happens — no harm, just no light.
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">02</span><h2>Wire it up</h2></div>
+    <ul class="checklist">
+      <li>Drop the Arduino and breadboard onto the Tinkercad workspace</li>
+      <li>Connect the Arduino's <code>5V</code> pin to the red rail of the breadboard, and <code>GND</code> to the blue rail</li>
+      <li>Plug the LED into the breadboard (long leg one row, short leg the next)</li>
+      <li>Connect the LED's long leg, through the resistor, to a digital pin on the Arduino — try pin <code>13</code></li>
+      <li>Connect the LED's short leg to the GND (blue) rail</li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">03</span><h2>Hints to write the code</h2></div>
+    <div class="hints">
+      <div class="hint">
+        <strong>Two functions, always.</strong>
+        Every Arduino sketch has <code>setup()</code> — runs once when the board starts — and <code>loop()</code> — runs over and over forever. You'll need both.
+      </div>
+      <div class="hint">
+        <strong>Tell the pin which way it goes.</strong>
+        Inside <code>setup()</code>, use <code>pinMode(pinNumber, OUTPUT)</code> to declare that the pin will be sending power out (to the LED), not reading something in.
+      </div>
+      <div class="hint">
+        <strong>Turn the pin on and off.</strong>
+        <code>digitalWrite(pinNumber, HIGH)</code> sends power. <code>digitalWrite(pinNumber, LOW)</code> stops. Put both inside <code>loop()</code>.
+      </div>
+      <div class="hint">
+        <strong>Wait between changes.</strong>
+        Use <code>delay(milliseconds)</code> to pause. <code>delay(1000)</code> is one second. Without delays, the LED switches so fast it just looks dim.
+      </div>
+      <div class="hint">
+        <strong>Order matters.</strong>
+        ON → wait → OFF → wait. Try blinking once per second first. Then try faster. Then SOS pattern. Make it yours.
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">04</span><h2>Try these once it works</h2></div>
+    <ul class="checklist">
+      <li>Make it blink twice as fast — what changes?</li>
+      <li>Make it blink in a heartbeat pattern: short-short-long pause</li>
+      <li>Add a second LED on a different pin, blinking out of sync</li>
+      <li>Spell SOS in Morse code (·· ·· ·· — — — ·· ·· ··)</li>
+    </ul>
+    <div class="callout">
+      <strong>When you're done →</strong>
+      Move on to <a href="rgb-mixer.html" style="color: var(--cream);">Project 02 — RGB Color Mixer</a>. You're about to learn how Arduino can read messages you type.
+    </div>
+  </section>
+
+  <footer>
+    <div>← <a href="index.html" style="color: var(--ink); border: none;">Back to all projects</a></div>
+    <div class="sig">01 / 03</div>
+  </footer>
+</div>
+
+<!-- ============== FLOATING BUTTONS ============== -->
+<div class="fab-stack">
+  <button class="fab secondary" onclick="toggleDrawer()"><span class="icon">📌</span><span class="label-full">Quick hints</span></button>
+  <button class="fab primary" onclick="openTinkercad()"><span class="icon">↗</span><span class="label-full">Open Tinkercad</span></button>
+</div>
+
+<!-- ============== HINT DRAWER ============== -->
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="toggleDrawer(false)"></div>
+<aside class="drawer" id="hint-drawer">
+  <div class="drawer-head">
+    <h3>Quick <em>reference</em></h3>
+    <button class="drawer-close" onclick="toggleDrawer(false)">✕</button>
+  </div>
+  <div class="drawer-body">
+    <h4>Components <em>checklist</em></h4>
+    <ul class="drawer-comp-list">
+      <li><span>Arduino Uno R3</span><span class="qn">×1</span></li>
+      <li><span>Breadboard (small)</span><span class="qn">×1</span></li>
+      <li><span>LED (any color)</span><span class="qn">×1</span></li>
+      <li><span>220Ω resistor</span><span class="qn">×1</span></li>
+      <li><span>Jumper wires</span><span class="qn">×4</span></li>
+    </ul>
+
+    <h4>Code <em>cheat sheet</em></h4>
+    <div class="drawer-tip"><strong>setup() vs loop()</strong>setup() runs once. loop() runs forever. Both are required.</div>
+    <div class="drawer-tip"><strong>Declare an output</strong><code>pinMode(13, OUTPUT);</code> goes in setup().</div>
+    <div class="drawer-tip"><strong>Turn on / off</strong><code>digitalWrite(13, HIGH)</code> = on. <code>digitalWrite(13, LOW)</code> = off.</div>
+    <div class="drawer-tip"><strong>Wait</strong><code>delay(1000)</code> pauses for 1 second (1000 ms).</div>
+
+    <h4>Stuck? <em>try this</em></h4>
+    <div class="drawer-tip"><strong>LED won't light</strong>Check the long leg goes toward the resistor → digital pin. Short leg → GND. Flip it if it's silent.</div>
+    <div class="drawer-tip"><strong>Sim won't run</strong>Hit "Start Simulation" in Tinkercad's top right. The button changes color when it's running.</div>
+
+    <div class="drawer-cta">
+      <strong>Working in Tinkercad?</strong><br>
+      Pop it open in a side window so you can keep these hints visible.
+      <button onclick="openTinkercad()">Open Tinkercad ↗</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ============== FIRST-VISIT SETUP MODAL ============== -->
+<div class="modal-backdrop" id="setup-modal">
+  <div class="modal">
+    <h2>Set up your <em>workspace</em></h2>
+    <p>Open Tinkercad in a side window, with this guide on the other half of your screen. We'll do the resizing for you.</p>
+    <div class="layout-art">
+      <div class="pane gd">THIS GUIDE</div>
+      <div class="pane tk">TINKERCAD</div>
+    </div>
+    <p style="font-size: 13px; color: var(--ink-soft);">You'll also see a floating "Open Tinkercad" button in the corner — click it any time. The "📌 Quick hints" button keeps a cheat sheet handy while you work.</p>
+    <div class="modal-buttons">
+      <button class="go" onclick="dismissSetupModal(true)">Open Tinkercad now ↗</button>
+      <button class="skip" onclick="dismissSetupModal(false)">I'll do it myself</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

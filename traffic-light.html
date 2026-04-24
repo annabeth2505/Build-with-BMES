@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 — Traffic Light · Build with BMES</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="brand">
+    <span class="brand-mark">
+      <span class="brand-kicker">build with</span>
+      <span class="brand-word">BMES<svg class="sparkle" viewBox="0 0 24 24"><path d="M12 1.5 L14.2 9.8 L22.5 12 L14.2 14.2 L12 22.5 L9.8 14.2 L1.5 12 L9.8 9.8 Z"/></svg></span>
+    </span>
+  </a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blink.html">01 Blink</a></li>
+    <li><a href="rgb-mixer.html">02 RGB</a></li>
+    <li><a href="traffic-light.html">03 Traffic</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+  <section class="proj-hero">
+    <a href="index.html" class="back">← All projects</a>
+    <div class="label">Project 03 · The big one</div>
+    <h1>A traffic light <em>that listens.</em></h1>
+    <p class="lede">Build a real working traffic light controlled by a button. Then unlock <em>five bonus levels</em> — each one adds a new feature: a yellow transition, a buzzer, an LCD screen, a live countdown, and finally a fully automated pedestrian system.</p>
+  </section>
+
+  <!-- ============== BASE LEVEL ============== -->
+  <section class="block">
+    <div class="goal">
+      <h3>Base Level: Cycle three lights with a button</h3>
+      <p>Three LEDs (red, yellow, green) and one button. Each press of the button changes which light is on. Red → Green → Yellow → Red → … you choose the order. <em>Finish this to unlock the bonus levels below.</em></p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">01</span><h2>Components for the base</h2></div>
+    <div class="components">
+      <div class="component"><span class="qty">1</span><div class="name">Arduino Uno R3</div></div>
+      <div class="component"><span class="qty">1</span><div class="name">Breadboard</div></div>
+      <div class="component"><span class="qty">1</span><div class="name">Red LED</div></div>
+      <div class="component"><span class="qty">1</span><div class="name">Yellow LED</div></div>
+      <div class="component"><span class="qty">1</span><div class="name">Green LED</div></div>
+      <div class="component"><span class="qty">3</span><div class="name">220Ω resistors</div><div class="note">One per LED</div></div>
+      <div class="component"><span class="qty">1</span><div class="name">Pushbutton</div></div>
+      <div class="component"><span class="qty">~10</span><div class="name">Jumper wires</div></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">02</span><h2>Wire it up</h2></div>
+    <ul class="checklist">
+      <li>Wire each LED to a different digital pin through its own 220Ω resistor — say pins 9, 10, 11</li>
+      <li>All LED short legs go to GND</li>
+      <li>Place the pushbutton across the gap in the middle of the breadboard so two of its legs are on each side</li>
+      <li>Connect one side of the button to a digital pin (try pin 8)</li>
+      <li>Connect the other side of the button to <strong>GND</strong> (this matters — see hint below)</li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">03</span><h2>Hints to write the base code</h2></div>
+    <div class="hints">
+      <div class="hint">
+        <strong>Use the Arduino's built-in pull-up.</strong>
+        For the button pin, use <code>pinMode(buttonPin, INPUT_PULLUP)</code>. This means the pin reads <code>HIGH</code> when the button is <em>not</em> pressed and <code>LOW</code> when it <em>is</em> pressed. (That's why the button connects to GND, not 5V.)
+      </div>
+      <div class="hint">
+        <strong>Track the current state.</strong>
+        Make a variable like <code>int lightState = 0;</code> outside any function. 0 means red, 1 means green, 2 means yellow. Each press of the button advances the state.
+      </div>
+      <div class="hint">
+        <strong>Detect the press, not the hold.</strong>
+        Read the button with <code>digitalRead(buttonPin)</code>. Compare it to a <code>lastButtonState</code> variable — only do something when the button <em>changes</em> from HIGH to LOW. Otherwise it cycles through all three lights in 0.1 seconds while you're still holding it.
+      </div>
+      <div class="hint">
+        <strong>Cycle without overflowing.</strong>
+        After advancing the state, use <code>lightState = (lightState + 1) % 3;</code>. The <code>% 3</code> wraps it back to 0 after 2. This is one of the most useful tricks in programming.
+      </div>
+      <div class="hint">
+        <strong>Turn off everything before turning one on.</strong>
+        Each time the state changes: turn off all three LEDs, then turn on the one that matches the new state. Otherwise lights stack on top of each other.
+      </div>
+    </div>
+
+    <button id="base-done-btn" class="unlock-btn" onclick="markBaseDone()">I got the base working! 🔓</button>
+  </section>
+
+  <!-- ============== BONUS LEVELS ============== -->
+  <section class="block">
+    <div class="block-head"><span class="step">★</span><h2>Bonus levels <em>— unlock as you go</em></h2></div>
+    <p style="margin-bottom: 32px; max-width: 720px;">Each level adds one new feature on top of the previous one. Don't skip — they build on each other. Click "I did it!" when each level works to unlock the next.</p>
+
+    <!-- LEVEL 1 -->
+    <div class="level" id="level-1">
+      <div class="level-head">
+        <div class="level-num">1</div>
+        <div class="level-title">
+          <h3>Yellow as a transition</h3>
+          <div class="sub">Add a 2-second pause</div>
+        </div>
+        <div class="level-status locked-tag">🔒 Locked</div>
+      </div>
+      <div class="level-body">
+        <p>Right now the lights cycle instantly. Real traffic lights warn you before changing — yellow flashes for a moment <em>before</em> green takes over.</p>
+        <p><strong>Goal:</strong> When the button is pressed and you're switching to green, light up <em>yellow</em> first for 2 seconds, <em>then</em> turn on green.</p>
+        <div class="hints">
+          <div class="hint">
+            <strong>The simplest tool: <code>delay()</code></strong>
+            Inside the "switch to green" branch, turn yellow on, call <code>delay(2000)</code>, turn yellow off, then turn green on. Order matters.
+          </div>
+          <div class="hint">
+            <strong>Watch out:</strong> <code>delay()</code> freezes everything — your button won't respond during those 2 seconds. That's fine for now. (Bonus 4 fixes this with a smarter approach.)
+          </div>
+        </div>
+        <button class="unlock-btn" onclick="completeLevel(1)">I did it! Unlock Level 2 →</button>
+      </div>
+    </div>
+
+    <!-- LEVEL 2 -->
+    <div class="level" id="level-2">
+      <div class="level-head">
+        <div class="level-num">2</div>
+        <div class="level-title">
+          <h3>Pedestrian buzzer</h3>
+          <div class="sub">Beeps when it's safe to cross</div>
+        </div>
+        <div class="level-status locked-tag">🔒 Locked</div>
+      </div>
+      <div class="level-body">
+        <p>Real crosswalks beep so people who can't see the light know when to walk. Add a piezo buzzer that beeps three times when the green light turns on.</p>
+        <p><strong>New component:</strong> 1× Piezo buzzer. Connect one leg to a digital pin (say pin 12), the other to GND.</p>
+        <div class="hints">
+          <div class="hint">
+            <strong>Make sound with <code>tone()</code></strong>
+            <code>tone(buzzerPin, frequency, duration)</code> — for example <code>tone(12, 1000, 200)</code> plays 1000Hz for 200 milliseconds. Higher frequency = higher pitch.
+          </div>
+          <div class="hint">
+            <strong>Repeat with a loop.</strong>
+            Use a <code>for</code> loop to beep three times. Inside the loop: <code>tone(...)</code>, then <code>delay(300)</code> so the beeps don't overlap.
+          </div>
+          <div class="hint">
+            <strong>When should it beep?</strong>
+            Only when green just turned on — not on every loop. Put the beep code inside the same branch where you turn green on.
+          </div>
+        </div>
+        <button class="unlock-btn" onclick="completeLevel(2)">I did it! Unlock Level 3 →</button>
+      </div>
+    </div>
+
+    <!-- LEVEL 3 -->
+    <div class="level" id="level-3">
+      <div class="level-head">
+        <div class="level-num">3</div>
+        <div class="level-title">
+          <h3>"WALK NOW" on an LCD</h3>
+          <div class="sub">Add a real screen</div>
+        </div>
+        <div class="level-status locked-tag">🔒 Locked</div>
+      </div>
+      <div class="level-body">
+        <p>Add an LCD screen that shows what pedestrians should do: <em>"STOP"</em>, <em>"GET READY"</em>, or <em>"WALK NOW"</em> depending on which light is on.</p>
+        <p><strong>New components:</strong></p>
+        <ul class="checklist">
+          <li>1× LCD 16x2 (the one in the Tinkercad components panel)</li>
+          <li>1× Potentiometer (small dial) — controls how dark the text appears</li>
+          <li>~10 more jumper wires</li>
+        </ul>
+        <div class="hints">
+          <div class="hint">
+            <strong>You'll need a library.</strong>
+            Add <code>#include &lt;LiquidCrystal.h&gt;</code> at the top of your code. Then create the LCD object: <code>LiquidCrystal lcd(7, 6, 5, 4, 3, 2);</code> — those are the pin numbers it'll use.
+          </div>
+          <div class="hint">
+            <strong>Wire pattern (Tinkercad LCD pin labels):</strong>
+            <span class="pill-list">
+              <span>VCC → 5V</span><span>GND → GND</span><span>V0 → potentiometer middle</span>
+              <span>RS → pin 7</span><span>RW → GND</span><span>E → pin 6</span>
+              <span>DB4 → 5</span><span>DB5 → 4</span><span>DB6 → 3</span><span>DB7 → 2</span>
+              <span>LED+ → 5V</span><span>LED- → GND</span>
+            </span>
+          </div>
+          <div class="hint">
+            <strong>Important: the button pin moves.</strong>
+            The LCD now uses pin 2. Move your button to pin 8 (or any free pin) and update your code.
+          </div>
+          <div class="hint">
+            <strong>Display text.</strong>
+            In <code>setup()</code>, call <code>lcd.begin(16, 2)</code>. To write something: <code>lcd.clear()</code>, then <code>lcd.setCursor(0, 0)</code>, then <code>lcd.print("WALK NOW")</code>. Set cursor to (0, 1) for the second row.
+          </div>
+          <div class="hint">
+            <strong>If the screen is black squares:</strong>
+            Turn the potentiometer dial. It controls contrast. The sweet spot is somewhere in the middle — when text appears clearly and the squares fade.
+          </div>
+        </div>
+        <button class="unlock-btn" onclick="completeLevel(3)">I did it! Unlock Level 4 →</button>
+      </div>
+    </div>
+
+    <!-- LEVEL 4 -->
+    <div class="level" id="level-4">
+      <div class="level-head">
+        <div class="level-num">4</div>
+        <div class="level-title">
+          <h3>Live pedestrian countdown</h3>
+          <div class="sub">10… 9… 8… on the LCD</div>
+        </div>
+        <div class="level-status locked-tag">🔒 Locked</div>
+      </div>
+      <div class="level-body">
+        <p>When the green light is on, show a <em>live</em> 10-second countdown on the LCD. Each second, the number ticks down. Last 3 seconds, the buzzer beeps a warning.</p>
+        <div class="hints">
+          <div class="hint">
+            <strong>Time without freezing: <code>millis()</code></strong>
+            <code>millis()</code> returns how many milliseconds the Arduino has been running. Save the value when green turns on: <code>greenStart = millis();</code>. Then in <code>loop()</code>, check the difference: <code>millis() - greenStart</code> tells you how much time has passed.
+          </div>
+          <div class="hint">
+            <strong>Convert to seconds and count down.</strong>
+            <code>int elapsed = (millis() - greenStart) / 1000;</code> gives seconds passed. <code>int remaining = 10 - elapsed;</code> gives time left.
+          </div>
+          <div class="hint">
+            <strong>Update the LCD only when the number changes.</strong>
+            If you redraw every loop, the screen flickers. Save the last shown number; only call <code>lcd.print()</code> when the new number is different.
+          </div>
+          <div class="hint">
+            <strong>Beep when it's almost up.</strong>
+            If <code>remaining</code> is 1, 2, or 3 — call <code>tone(buzzerPin, 880, 150)</code>.
+          </div>
+          <div class="hint">
+            <strong>Why this beats <code>delay()</code>:</strong>
+            With <code>millis()</code>, the button still works during the countdown. The Arduino keeps checking everything in parallel. This is how real-time systems work.
+          </div>
+        </div>
+        <button class="unlock-btn" onclick="completeLevel(4)">I did it! Unlock Level 5 →</button>
+      </div>
+    </div>
+
+    <!-- LEVEL 5 -->
+    <div class="level" id="level-5">
+      <div class="level-head">
+        <div class="level-num">5</div>
+        <div class="level-title">
+          <h3>Auto-return to red</h3>
+          <div class="sub">A fully automated traffic light</div>
+        </div>
+        <div class="level-status locked-tag">🔒 Locked</div>
+      </div>
+      <div class="level-body">
+        <p>The grand finale. When the countdown hits zero, show <em>"TIME IS UP"</em> on the LCD for 1.5 seconds, then automatically switch back to red — no button press needed. Now you have a real traffic light: press the button to request a walk, get your countdown, get returned to stop. Hands-free.</p>
+        <div class="hints">
+          <div class="hint">
+            <strong>When countdown reaches zero:</strong>
+            Display "TIME IS UP" on the LCD. Use <code>delay(1500)</code> to let pedestrians read it.
+          </div>
+          <div class="hint">
+            <strong>Then transition back to red.</strong>
+            Turn green off, turn red on. Update the LCD to whatever you show during red ("STOP" or similar).
+          </div>
+          <div class="hint">
+            <strong>Don't forget the state variable.</strong>
+            Set <code>lightState = 0;</code> so the next button press still cycles correctly. If you skip this, the state machine gets out of sync and the lights go wrong on the next press.
+          </div>
+          <div class="hint">
+            <strong>Bonus polish:</strong>
+            Reset the countdown variable too, so if the user presses again, you start at 10 instead of -3.
+          </div>
+        </div>
+        <button class="unlock-btn" onclick="completeLevel(5)">I finished everything! 🎉</button>
+      </div>
+    </div>
+
+    <div class="reset-row">
+      Want to start over? <button onclick="resetProgress()">Reset all progress</button>
+    </div>
+  </section>
+
+  <footer>
+    <div>← <a href="rgb-mixer.html" style="color: var(--ink); border: none;">Project 02 — RGB Mixer</a></div>
+    <div class="sig">03 / 03</div>
+  </footer>
+</div>
+
+<!-- ============== FLOATING BUTTONS ============== -->
+<div class="fab-stack">
+  <button class="fab secondary" onclick="toggleDrawer()"><span class="icon">📌</span><span class="label-full">Quick hints</span></button>
+  <button class="fab primary" onclick="openTinkercad()"><span class="icon">↗</span><span class="label-full">Open Tinkercad</span></button>
+</div>
+
+<!-- ============== HINT DRAWER ============== -->
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="toggleDrawer(false)"></div>
+<aside class="drawer" id="hint-drawer">
+  <div class="drawer-head">
+    <h3>Quick <em>reference</em></h3>
+    <button class="drawer-close" onclick="toggleDrawer(false)">✕</button>
+  </div>
+  <div class="drawer-body">
+
+    <h4>Base — <em>components</em></h4>
+    <ul class="drawer-comp-list">
+      <li><span>Arduino Uno R3</span><span class="qn">×1</span></li>
+      <li><span>Breadboard</span><span class="qn">×1</span></li>
+      <li><span>Red / Yellow / Green LEDs</span><span class="qn">×3</span></li>
+      <li><span>220Ω resistor</span><span class="qn">×3</span></li>
+      <li><span>Pushbutton</span><span class="qn">×1</span></li>
+      <li><span>Jumper wires</span><span class="qn">×10</span></li>
+    </ul>
+
+    <h4>Base — <em>code cheat sheet</em></h4>
+    <div class="drawer-tip"><strong>Button reads backwards</strong><code>pinMode(btn, INPUT_PULLUP);</code> Button reads <code>HIGH</code> when not pressed, <code>LOW</code> when pressed. Wire its other leg to <strong>GND</strong>.</div>
+    <div class="drawer-tip"><strong>Detect press, not hold</strong>Compare current button state to <code>lastBtnState</code>. Only act when it changes from HIGH → LOW.</div>
+    <div class="drawer-tip"><strong>Cycle states</strong><code>lightState = (lightState + 1) % 3;</code> wraps 0 → 1 → 2 → 0.</div>
+    <div class="drawer-tip"><strong>Reset before lighting</strong>Turn ALL LEDs off first, then turn on the right one. Otherwise they stack.</div>
+
+    <h4>Bonus 1 — <em>yellow delay</em></h4>
+    <div class="drawer-tip"><code>delay(2000)</code> pauses 2 seconds. Yellow on → wait → yellow off → green on.</div>
+
+    <h4>Bonus 2 — <em>buzzer</em></h4>
+    <div class="drawer-tip"><strong>Make sound</strong><code>tone(buzzer, 1000, 200);</code> = 1000Hz for 200ms.</div>
+    <div class="drawer-tip"><strong>Repeat 3 times</strong>Use a <code>for</code> loop, with <code>delay(300)</code> between beeps.</div>
+
+    <h4>Bonus 3 — <em>LCD wiring</em></h4>
+    <div class="drawer-tip"><strong>Library</strong><code>#include &lt;LiquidCrystal.h&gt;</code><br><code>LiquidCrystal lcd(7, 6, 5, 4, 3, 2);</code></div>
+    <div class="drawer-tip"><strong>Pin map</strong>VCC→5V · GND→GND · V0→pot middle · RS→7 · RW→GND · E→6 · DB4→5 · DB5→4 · DB6→3 · DB7→2 · LED+→5V · LED-→GND</div>
+    <div class="drawer-tip"><strong>⚠ Move the button</strong>LCD now uses pin 2. Move button to pin 8.</div>
+    <div class="drawer-tip"><strong>Print text</strong><code>lcd.begin(16, 2);</code> in setup. Then <code>lcd.clear();</code> + <code>lcd.setCursor(0,0);</code> + <code>lcd.print("WALK NOW");</code></div>
+    <div class="drawer-tip"><strong>Black squares?</strong>Turn the potentiometer dial. That's the contrast — find the sweet spot.</div>
+
+    <h4>Bonus 4 — <em>millis() countdown</em></h4>
+    <div class="drawer-tip"><strong>Why not delay()?</strong><code>delay()</code> freezes everything. <code>millis()</code> lets you check time without stopping.</div>
+    <div class="drawer-tip"><strong>Save the start</strong><code>greenStart = millis();</code> when green turns on.</div>
+    <div class="drawer-tip"><strong>Compute remaining</strong><code>int remaining = 10 - (millis() - greenStart) / 1000;</code></div>
+    <div class="drawer-tip"><strong>Don't redraw constantly</strong>Only call <code>lcd.print()</code> when <code>remaining</code> changes. Otherwise the screen flickers.</div>
+
+    <h4>Bonus 5 — <em>auto reset</em></h4>
+    <div class="drawer-tip"><strong>When countdown = 0</strong>Show "TIME IS UP" → <code>delay(1500)</code> → green off, red on.</div>
+    <div class="drawer-tip"><strong>⚠ Reset the state</strong><code>lightState = 0;</code> after auto-switching, or the next button press will be wrong.</div>
+
+    <div class="drawer-cta">
+      <strong>Working in Tinkercad?</strong><br>
+      Pop it open in a side window so you can keep these hints visible.
+      <button onclick="openTinkercad()">Open Tinkercad ↗</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ============== FIRST-VISIT SETUP MODAL ============== -->
+<div class="modal-backdrop" id="setup-modal">
+  <div class="modal">
+    <h2>Set up your <em>workspace</em></h2>
+    <p>Open Tinkercad in a side window, with this guide on the other half of your screen. We'll do the resizing for you.</p>
+    <div class="layout-art">
+      <div class="pane gd">THIS GUIDE</div>
+      <div class="pane tk">TINKERCAD</div>
+    </div>
+    <p style="font-size: 13px; color: var(--ink-soft);">You'll also see a floating "Open Tinkercad" button in the corner — click it any time. The "📌 Quick hints" button keeps a cheat sheet handy while you work.</p>
+    <div class="modal-buttons">
+      <button class="go" onclick="dismissSetupModal(true)">Open Tinkercad now ↗</button>
+      <button class="skip" onclick="dismissSetupModal(false)">I'll do it myself</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

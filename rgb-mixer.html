@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02 — RGB Color Mixer · Build with BMES</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="brand">
+    <span class="brand-mark">
+      <span class="brand-kicker">build with</span>
+      <span class="brand-word">BMES<svg class="sparkle" viewBox="0 0 24 24"><path d="M12 1.5 L14.2 9.8 L22.5 12 L14.2 14.2 L12 22.5 L9.8 14.2 L1.5 12 L9.8 9.8 Z"/></svg></span>
+    </span>
+  </a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blink.html">01 Blink</a></li>
+    <li><a href="rgb-mixer.html">02 RGB</a></li>
+    <li><a href="traffic-light.html">03 Traffic</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+  <section class="proj-hero">
+    <a href="index.html" class="back">← All projects</a>
+    <div class="label">Project 02</div>
+    <h1>Mix colors with <em>code.</em></h1>
+    <p class="lede">Type three numbers — red, green, blue — into the Serial Monitor. Watch your LED change color in real time. You're now writing software that talks to hardware. That's the whole job.</p>
+  </section>
+
+  <section class="block">
+    <div class="goal">
+      <h3>Type a color, see a color</h3>
+      <p>Open the Serial Monitor, type something like <code>255,0,128</code>, and the RGB LED should glow that exact color. Numbers from 0–255 for each channel.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">01</span><h2>Components you'll need</h2></div>
+    <div class="components">
+      <div class="component"><span class="qty">1</span><div class="name">Arduino Uno R3</div></div>
+      <div class="component"><span class="qty">1</span><div class="name">Breadboard</div></div>
+      <div class="component"><span class="qty">1</span><div class="name">RGB LED</div><div class="note">4 legs — one is shared (common cathode in Tinkercad)</div></div>
+      <div class="component"><span class="qty">3</span><div class="name">220Ω resistors</div><div class="note">One per color channel</div></div>
+      <div class="component"><span class="qty">~6</span><div class="name">Jumper wires</div></div>
+    </div>
+    <div class="callout">
+      <strong>The RGB LED has 4 legs</strong>
+      Three are for red, green, and blue. The longest leg is the <em>common</em> — connect it to GND. Hover over the LED in Tinkercad to see which leg is which.
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">02</span><h2>Wire it up</h2></div>
+    <ul class="checklist">
+      <li>Place the RGB LED on the breadboard so each leg is in its own row</li>
+      <li>Connect the long (common) leg to GND</li>
+      <li>Run a 220Ω resistor from each of the other 3 legs to a digital pin that supports <strong>PWM</strong> — the ones marked with a <code>~</code> symbol (try pins 9, 10, 11)</li>
+      <li>Keep track of which pin connects to which color — you'll need that in your code</li>
+    </ul>
+    <div class="callout">
+      <strong>Why PWM pins (the ones with <code>~</code>)?</strong>
+      Regular digital pins only know ON or OFF. PWM pins can fake "in-between" brightness by turning on and off really fast. That's how you get 256 shades per color instead of just two.
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">03</span><h2>Hints to write the code</h2></div>
+    <div class="hints">
+      <div class="hint">
+        <strong>Set up three output pins.</strong>
+        In <code>setup()</code>, declare each color pin as an OUTPUT — same as in the blink project, but three of them.
+      </div>
+      <div class="hint">
+        <strong>Open the channel between Arduino and your computer.</strong>
+        Add <code>Serial.begin(9600)</code> in <code>setup()</code>. This lets the Arduino send and receive text through the Serial Monitor.
+      </div>
+      <div class="hint">
+        <strong>Brightness ≠ digitalWrite.</strong>
+        For variable brightness, use <code>analogWrite(pin, value)</code> where value is between 0 (off) and 255 (full blast). This only works on PWM pins (~).
+      </div>
+      <div class="hint">
+        <strong>Reading what someone types.</strong>
+        In <code>loop()</code>, check <code>Serial.available()</code>. If there's data waiting, read three numbers using <code>Serial.parseInt()</code>. It automatically pulls out the next integer from the input.
+      </div>
+      <div class="hint">
+        <strong>Print it back to confirm.</strong>
+        After reading the values, use <code>Serial.print()</code> and <code>Serial.println()</code> to echo them back so you can see what the Arduino received. Great for debugging.
+      </div>
+      <div class="hint">
+        <strong>Format you'll type.</strong>
+        Type three numbers separated by commas or spaces, like <code>200,50,255</code> and press Enter. <code>parseInt</code> handles the separators for you.
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><span class="step">04</span><h2>Try these once it works</h2></div>
+    <ul class="checklist">
+      <li>Type <code>255,0,0</code> for pure red. Then <code>0,255,0</code>. Then <code>0,0,255</code>.</li>
+      <li>What numbers make purple? Yellow? White? Hot pink?</li>
+      <li>Make the LED slowly fade between two colors using a <code>for</code> loop and small delays</li>
+      <li>Print a "color name guesser" message: if R is highest, print "Looks reddish!"</li>
+    </ul>
+    <div class="callout">
+      <strong>When you're done →</strong>
+      Move on to <a href="traffic-light.html" style="color: var(--cream);">Project 03 — Traffic Light</a>. The big one. With unlockable bonus levels.
+    </div>
+  </section>
+
+  <footer>
+    <div>← <a href="blink.html" style="color: var(--ink); border: none;">Project 01 — Blink</a></div>
+    <div class="sig">02 / 03</div>
+  </footer>
+</div>
+
+<!-- ============== FLOATING BUTTONS ============== -->
+<div class="fab-stack">
+  <button class="fab secondary" onclick="toggleDrawer()"><span class="icon">📌</span><span class="label-full">Quick hints</span></button>
+  <button class="fab primary" onclick="openTinkercad()"><span class="icon">↗</span><span class="label-full">Open Tinkercad</span></button>
+</div>
+
+<!-- ============== HINT DRAWER ============== -->
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="toggleDrawer(false)"></div>
+<aside class="drawer" id="hint-drawer">
+  <div class="drawer-head">
+    <h3>Quick <em>reference</em></h3>
+    <button class="drawer-close" onclick="toggleDrawer(false)">✕</button>
+  </div>
+  <div class="drawer-body">
+    <h4>Components <em>checklist</em></h4>
+    <ul class="drawer-comp-list">
+      <li><span>Arduino Uno R3</span><span class="qn">×1</span></li>
+      <li><span>Breadboard</span><span class="qn">×1</span></li>
+      <li><span>RGB LED (4-leg)</span><span class="qn">×1</span></li>
+      <li><span>220Ω resistor</span><span class="qn">×3</span></li>
+      <li><span>Jumper wires</span><span class="qn">×6</span></li>
+    </ul>
+
+    <h4>PWM <em>pins only</em></h4>
+    <div class="drawer-tip"><strong>Use pins with <code>~</code></strong>Pins 3, 5, 6, 9, 10, 11 support analogWrite. Others won't fade — they'll only do full on/off.</div>
+
+    <h4>Code <em>cheat sheet</em></h4>
+    <div class="drawer-tip"><strong>Brightness, not just on/off</strong><code>analogWrite(pin, value)</code> — value is 0–255.</div>
+    <div class="drawer-tip"><strong>Open the Serial channel</strong><code>Serial.begin(9600)</code> in setup(). Then click "Serial Monitor" inside the Tinkercad code editor.</div>
+    <div class="drawer-tip"><strong>Wait for input</strong><code>if (Serial.available()) { … }</code> only runs when there's something to read.</div>
+    <div class="drawer-tip"><strong>Read three numbers</strong><code>int r = Serial.parseInt();</code><br>It auto-skips commas, spaces, and newlines.</div>
+    <div class="drawer-tip"><strong>Echo it back</strong><code>Serial.print("R = ");</code> + <code>Serial.println(r);</code>. Confirms what was received.</div>
+
+    <h4>Try <em>typing</em></h4>
+    <ul class="drawer-comp-list" style="font-size: 13px;">
+      <li><span><code>255,0,0</code></span><span style="color: #FF4D2E;">red</span></li>
+      <li><span><code>0,255,0</code></span><span style="color: #2a8;">green</span></li>
+      <li><span><code>0,0,255</code></span><span style="color: #1E43D9;">blue</span></li>
+      <li><span><code>255,0,255</code></span><span>magenta</span></li>
+      <li><span><code>255,180,0</code></span><span>amber</span></li>
+    </ul>
+
+    <h4>Stuck? <em>try this</em></h4>
+    <div class="drawer-tip"><strong>Nothing happens when I type</strong>Did you remember <code>Serial.begin(9600)</code>? And is the Serial Monitor open?</div>
+    <div class="drawer-tip"><strong>Color is wrong</strong>Mix-up between which pin = which color. Set just one channel high and rename the wires.</div>
+
+    <div class="drawer-cta">
+      <strong>Working in Tinkercad?</strong><br>
+      Side-by-side beats tab-switching every time.
+      <button onclick="openTinkercad()">Open Tinkercad ↗</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ============== FIRST-VISIT SETUP MODAL ============== -->
+<div class="modal-backdrop" id="setup-modal">
+  <div class="modal">
+    <h2>Set up your <em>workspace</em></h2>
+    <p>Open Tinkercad in a side window, with this guide on the other half of your screen. We'll do the resizing for you.</p>
+    <div class="layout-art">
+      <div class="pane gd">THIS GUIDE</div>
+      <div class="pane tk">TINKERCAD</div>
+    </div>
+    <p style="font-size: 13px; color: var(--ink-soft);">You'll also see a floating "Open Tinkercad" button in the corner — click it any time. The "📌 Quick hints" button keeps a cheat sheet handy while you work.</p>
+    <div class="modal-buttons">
+      <button class="go" onclick="dismissSetupModal(true)">Open Tinkercad now ↗</button>
+      <button class="skip" onclick="dismissSetupModal(false)">I'll do it myself</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
