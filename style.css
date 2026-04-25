@@ -330,6 +330,38 @@ ul.checklist li::before {
 }
 .callout strong { font-family: 'Fraunces', serif; font-weight: 900; font-size: 18px; display: block; margin-bottom: 6px; }
 
+/* reveal / show-solution accordion */
+.reveal {
+  margin-top: 32px;
+  border: 2px dashed var(--ink);
+  background: var(--cream-2);
+}
+.reveal summary {
+  padding: 18px 24px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 14px;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  list-style: none;
+  user-select: none;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.reveal summary::-webkit-details-marker { display: none; }
+.reveal summary::after {
+  content: "▾"; font-size: 18px; transition: transform 0.2s;
+}
+.reveal[open] summary::after { transform: rotate(180deg); }
+.reveal summary:hover { background: var(--rose); }
+.reveal[open] summary { border-bottom: 2px dashed var(--ink); }
+.reveal-warn {
+  padding: 16px 24px 0;
+  font-style: italic; font-family: 'Fraunces', serif; font-weight: 700;
+  font-size: 16px; color: var(--coral);
+}
+.reveal pre { margin: 16px 24px; font-size: 12.5px; }
+.reveal-note { padding: 0 24px 20px; font-size: 13px; color: var(--ink-soft); }
+.reveal-note strong { color: var(--ink); font-family: 'Fraunces', serif; font-weight: 900; font-size: 15px; }
+
 
 /* ---------- footer ---------- */
 footer {

@@ -275,6 +275,152 @@
       </div>
     </div>
 
+    <details class="reveal">
+      <summary>🔓 Reveal full solution (only after Level 5)</summary>
+      <p class="reveal-warn">Only peek if you've actually finished — or you've been stuck for 20+ minutes and need to compare. The struggle <em>is</em> the lesson.</p>
+<pre><code>#include &lt;LiquidCrystal.h&gt;
+LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
+
+// --- pin assignments ---
+const int RED_PIN    = 11;
+const int YELLOW_PIN = 10;
+const int GREEN_PIN  =  9;
+const int BTN_PIN    =  8;
+const int BUZZER_PIN = 12;
+
+// --- state tracker ---
+int lightState   = 0;    // 0=red  1=green  2=yellow
+int lastBtnState = HIGH; // HIGH = not pressed (INPUT_PULLUP)
+
+// --- pedestrian countdown ---
+unsigned long greenStartTime = 0;
+bool greenActive  = false;
+int  walkCountdown = 10;
+
+void setup() {
+  pinMode(RED_PIN,    OUTPUT);
+  pinMode(YELLOW_PIN, OUTPUT);
+  pinMode(GREEN_PIN,  OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(BTN_PIN,    INPUT_PULLUP);
+
+  lcd.begin(16, 2);
+
+  digitalWrite(RED_PIN, HIGH);
+  showRed();
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  int btnState = digitalRead(BTN_PIN);
+
+  // detect the MOMENT of button press
+  if (btnState == LOW && lastBtnState == HIGH) {
+    digitalWrite(RED_PIN,    LOW);
+    digitalWrite(YELLOW_PIN, LOW);
+    digitalWrite(GREEN_PIN,  LOW);
+    greenActive = false;
+
+    lightState = (lightState + 1) % 3;
+
+    if (lightState == 0) {
+      digitalWrite(RED_PIN, HIGH);
+      showRed();
+    }
+
+    if (lightState == 1) {
+      // yellow for 2 seconds to warn drivers
+      digitalWrite(YELLOW_PIN, HIGH);
+      showYellowWarning();
+      delay(2000);
+      digitalWrite(YELLOW_PIN, LOW);
+
+      // now switch to green + start pedestrian timer
+      digitalWrite(GREEN_PIN, HIGH);
+      greenStartTime = millis();
+      greenActive    = true;
+      walkCountdown  = 10;
+      showGreen(walkCountdown);
+      pedestrianBeep();
+    }
+
+    if (lightState == 2) {
+      digitalWrite(YELLOW_PIN, HIGH);
+      showYellowWarning();
+    }
+
+    delay(50);
+  }
+
+  // live countdown while green is active
+  if (greenActive) {
+    int elapsed   = (millis() - greenStartTime) / 1000;
+    int remaining = 10 - elapsed;
+
+    if (remaining != walkCountdown && remaining &gt; 0) {
+      walkCountdown = remaining;
+      showGreen(walkCountdown);
+      if (remaining &lt;= 3) {
+        tone(BUZZER_PIN, 880, 150); // urgent beep
+      }
+    }
+
+    if (remaining &lt;= 0) {
+      greenActive = false;
+      showWait();
+      delay(1500);
+
+      digitalWrite(GREEN_PIN, LOW);
+      digitalWrite(RED_PIN, HIGH);
+      lightState = 0;
+      showRed();
+    }
+  }
+
+  lastBtnState = btnState;
+}
+
+void showRed() {
+  lcd.clear();
+  lcd.setCursor(0, 0); lcd.print("     STOP       ");
+  lcd.setCursor(0, 1); lcd.print(" Wait for green ");
+  Serial.println("Now: RED");
+}
+
+void showYellowWarning() {
+  lcd.clear();
+  lcd.setCursor(0, 0); lcd.print(" PREPARE TO GO  ");
+  lcd.setCursor(0, 1); lcd.print("  Green coming! ");
+  Serial.println("Now: YELLOW");
+}
+
+void showGreen(int seconds) {
+  lcd.clear();
+  lcd.setCursor(0, 0); lcd.print("  WALK NOW :)   ");
+  lcd.setCursor(0, 1); lcd.print("  Time left: ");
+  lcd.print(seconds);
+  lcd.print("s  ");
+  Serial.print("GREEN - Countdown: "); Serial.println(seconds);
+}
+
+void showWait() {
+  lcd.clear();
+  lcd.setCursor(0, 0); lcd.print("  TIME IS UP!   ");
+  lcd.setCursor(0, 1); lcd.print(" Wait for signal");
+  Serial.println("Countdown ended");
+}
+
+void pedestrianBeep() {
+  // 3 quick beeps = crossing signal starting
+  for (int i = 0; i &lt; 3; i++) {
+    tone(BUZZER_PIN, 1000, 200);
+    delay(300);
+  }
+}</code></pre>
+      <p class="reveal-note"><strong>Compare your version to this one.</strong> What did you do differently? Did you use functions like <code>showRed()</code>, or did you write everything inline? Did you use <code>millis()</code> for the countdown, or <code>delay()</code>? Both can work — but only one keeps the button responsive.</p>
+    </details>
+
     <div class="reset-row">
       Want to start over? <button onclick="resetProgress()">Reset all progress</button>
     </div>
