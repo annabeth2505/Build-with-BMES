@@ -58,8 +58,9 @@
     <ul class="checklist">
       <li>Place the RGB LED on the breadboard so each leg is in its own row</li>
       <li>Connect the long (common) leg to GND</li>
-      <li>Run a 220Ω resistor from each of the other 3 legs to a digital pin that supports <strong>PWM</strong> — the ones marked with a <code>~</code> symbol (try pins 9, 10, 11)</li>
-      <li>Keep track of which pin connects to which color — you'll need that in your code</li>
+      <li>Run a 220Ω resistor from each of the other 3 legs to a digital pin that supports <strong>PWM</strong> — the ones marked with a <code>~</code> symbol</li>
+      <li>Suggested pins: <code>RED → 9</code> · <code>BLUE → 10</code> · <code>GREEN → 11</code> (any 3 PWM pins work, just remember which is which)</li>
+      <li>Write down which pin connects to which color — you'll need that in your code</li>
     </ul>
     <div class="callout">
       <strong>Why PWM pins (the ones with <code>~</code>)?</strong>
@@ -79,6 +80,14 @@
         Add <code>Serial.begin(9600)</code> in <code>setup()</code>. This lets the Arduino send and receive text through the Serial Monitor.
       </div>
       <div class="hint">
+        <strong>Speed up reads (optional but nice).</strong>
+        By default <code>parseInt()</code> waits up to 1 second for more input — feels laggy. Add <code>Serial.setTimeout(10)</code> in <code>setup()</code> and reads become near-instant.
+      </div>
+      <div class="hint">
+        <strong>Print a welcome banner.</strong>
+        At the end of <code>setup()</code>, use <code>Serial.println()</code> to print instructions like "Type three numbers: R G B (0–255)". This shows up the moment the Serial Monitor opens — friendlier than a blank screen.
+      </div>
+      <div class="hint">
         <strong>Brightness ≠ digitalWrite.</strong>
         For variable brightness, use <code>analogWrite(pin, value)</code> where value is between 0 (off) and 255 (full blast). This only works on PWM pins (~).
       </div>
@@ -92,7 +101,7 @@
       </div>
       <div class="hint">
         <strong>Format you'll type.</strong>
-        Type three numbers separated by commas or spaces, like <code>200,50,255</code> and press Enter. <code>parseInt</code> handles the separators for you.
+        Type three numbers separated by spaces or commas, like <code>200 50 255</code> and press Enter. <code>parseInt</code> handles the separators for you.
       </div>
     </div>
   </section>
@@ -146,6 +155,7 @@
     <h4>Code <em>cheat sheet</em></h4>
     <div class="drawer-tip"><strong>Brightness, not just on/off</strong><code>analogWrite(pin, value)</code> — value is 0–255.</div>
     <div class="drawer-tip"><strong>Open the Serial channel</strong><code>Serial.begin(9600)</code> in setup(). Then click "Serial Monitor" inside the Tinkercad code editor.</div>
+    <div class="drawer-tip"><strong>Snappy reads</strong><code>Serial.setTimeout(10)</code> in setup() makes <code>parseInt()</code> respond instantly instead of waiting up to 1s.</div>
     <div class="drawer-tip"><strong>Wait for input</strong><code>if (Serial.available()) { … }</code> only runs when there's something to read.</div>
     <div class="drawer-tip"><strong>Read three numbers</strong><code>int r = Serial.parseInt();</code><br>It auto-skips commas, spaces, and newlines.</div>
     <div class="drawer-tip"><strong>Echo it back</strong><code>Serial.print("R = ");</code> + <code>Serial.println(r);</code>. Confirms what was received.</div>

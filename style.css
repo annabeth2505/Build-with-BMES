@@ -330,6 +330,7 @@ ul.checklist li::before {
 }
 .callout strong { font-family: 'Fraunces', serif; font-weight: 900; font-size: 18px; display: block; margin-bottom: 6px; }
 
+
 /* ---------- footer ---------- */
 footer {
   border-top: 2px solid var(--ink);
